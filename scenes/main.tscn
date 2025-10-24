@@ -11,6 +11,7 @@ default_world_scene = "res://scenes/worlds/level.tscn"
 [node name="World" type="Node3D" parent="."]
 
 [node name="GUI" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

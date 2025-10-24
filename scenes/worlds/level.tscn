@@ -32,3 +32,4 @@ material = ExtResource("1_demjq")
 
 [node name="Character" parent="." instance=ExtResource("2_x8nth")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.8585227, 0.50000024, 4.5065274)
+default_reticle = ""

@@ -65,7 +65,7 @@ extends CharacterBody3D
 	JUMP = "jump",
 	CROUCH = "crouch",
 	SPRINT = "sprint",
-	PAUSE = "w"
+	PAUSE = "pause"
 	}
 @export_subgroup("Controller Specific")
 ## This only affects how the camera is handled, the rest should be covered by adding controller inputs to the existing actions in the Input Map.
