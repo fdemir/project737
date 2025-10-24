@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0gq8hv2r88rj"]
+
+[ext_resource type="Script" uid="uid://c8jcl3ghwqo4k" path="res://scenes/items/stick/stick.gd" id="1_lnf4m"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_lrnr6"]
+size = Vector3(0.8, 0.2, 0.2)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_lrnr6"]
+points = PackedVector3Array(0.4, 0.1, 0.1, 0.4, 0.1, -0.1, -0.4, 0.1, 0.1, 0.4, -0.1, 0.1, 0.4, -0.1, -0.1, -0.4, 0.1, -0.1, -0.4, -0.1, 0.1, -0.4, -0.1, -0.1)
+
+[node name="Stick" type="StaticBody3D"]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_lnf4m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_lrnr6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_lrnr6")

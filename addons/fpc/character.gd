@@ -50,6 +50,8 @@ extends CharacterBody3D
 ## A reference to the the player's collision shape for use in the character script.
 @export var COLLISION_MESH : CollisionShape3D
 
+@export var RAY : RayCast3D
+
 #endregion
 
 #region Controls Export Group
@@ -201,6 +203,14 @@ func _physics_process(delta): # Most things happen here.
 	update_debug_menu_per_tick()
 
 	was_on_floor = is_on_floor() # This must always be at the end of physics_process
+
+	handle_item_interaction()
+
+func handle_item_interaction():
+	if RAY.is_colliding():
+		var item = RAY.get_collider()
+		if item.is_in_group("items"):
+			print("Item detected: ", item.item_name)
 
 #endregion
 
