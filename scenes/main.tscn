@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsbqxcmuddnmy"]
+
+[ext_resource type="Script" uid="uid://w6an8mxx6hr7" path="res://scripts/game_controller.gd" id="1_o5qli"]
+
+[node name="Game" type="Node" node_paths=PackedStringArray("world", "gui")]
+script = ExtResource("1_o5qli")
+world = NodePath("World")
+gui = NodePath("GUI")
+default_world_scene = "res://scenes/worlds/level.tscn"
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="GUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
