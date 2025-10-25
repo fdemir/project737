@@ -73,3 +73,7 @@ pause={
 3d_render/layer_1="world"
 3d_render/layer_2="character"
 3d_render/layer_3="item"
+
+[physics]
+
+common/physics_interpolation=true

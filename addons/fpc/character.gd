@@ -166,6 +166,8 @@ func _process(_delta):
 	if pausing_enabled:
 		handle_pausing()
 
+	handle_head_rotation()
+
 	update_debug_menu_per_frame()
 
 
@@ -184,8 +186,6 @@ func _physics_process(delta): # Most things happen here.
 		input_dir = Input.get_vector(controls.LEFT, controls.RIGHT, controls.FORWARD, controls.BACKWARD)
 
 	handle_movement(delta, input_dir)
-
-	handle_head_rotation()
 
 	# The player is not able to stand up if the ceiling is too low
 	low_ceiling = $CrouchCeilingDetection.is_colliding()

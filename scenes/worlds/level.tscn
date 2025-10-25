@@ -1,6 +1,5 @@
-[gd_scene load_steps=7 format=3 uid="uid://deuvaeljog13r"]
+[gd_scene load_steps=6 format=3 uid="uid://deuvaeljog13r"]
 
-[ext_resource type="Material" uid="uid://rdhrhgrb78ls" path="res://addons/cyclops_level_builder/materials/grid.tres" id="1_demjq"]
 [ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="2_x8nth"]
 [ext_resource type="PackedScene" uid="uid://c0gq8hv2r88rj" path="res://scenes/items/stick/stick.tscn" id="3_pe2ao"]
 
@@ -29,7 +28,6 @@ shadow_enabled = true
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 use_collision = true
 size = Vector3(20, 1, 20)
-material = ExtResource("1_demjq")
 
 [node name="Character" parent="." instance=ExtResource("2_x8nth")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.8585227, 0.50000024, 4.5065274)
