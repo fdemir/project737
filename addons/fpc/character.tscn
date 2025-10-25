@@ -1,8 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://cc1m2a1obsyn4"]
+[gd_scene load_steps=23 format=3 uid="uid://cc1m2a1obsyn4"]
 
 [ext_resource type="Script" uid="uid://hutuis63hgev" path="res://addons/fpc/character.gd" id="1_0t4e8"]
 [ext_resource type="Script" uid="uid://dgfl3skp075ft" path="res://addons/fpc/EditorModule.gd" id="3_v3ckk"]
 [ext_resource type="Script" uid="uid://u5u7xxlvmcxx" path="res://addons/fpc/debug.gd" id="3_x1wcc"]
+[ext_resource type="Script" uid="uid://bxn6dpt68u0rx" path="res://scripts/managers/inventory_manager.gd" id="4_bx7cj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp17n"]
 albedo_color = Color(0.909804, 0.596078, 0, 1)
@@ -383,6 +384,7 @@ MarginContainer/constants/margin_top = 10
 [node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH", "RAY")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("1_0t4e8")
+base_speed = 2.8
 default_reticle = "res://addons/fpc/reticles/reticle_1.tscn"
 HEAD = NodePath("Head")
 CAMERA = NodePath("Head/Camera")
@@ -413,6 +415,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 [node name="Ray" type="RayCast3D" parent="Head/Camera"]
 transform = Transform3D(1.8, 0, 0, 0, -7.86805e-08, -1.8, 0, 1.8, -7.86805e-08, 0, 0, 0)
 collision_mask = 7
+
+[node name="ItemMount" type="Marker3D" parent="Head/Camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31808016, 0, -0.8943661)
 
 [node name="HeadbobAnimation" type="AnimationPlayer" parent="Head"]
 libraries = {
@@ -451,6 +456,73 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/DebugPanel/MarginContainer"]
 layout_mode = 2
 
+[node name="Hotbar" type="HBoxContainer" parent="UserInterface"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -90.0
+offset_right = 180.0
+offset_bottom = -40.0
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Slot1" type="PanelContainer" parent="UserInterface/Hotbar"]
+custom_minimum_size = Vector2(100, 48)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="UserInterface/Hotbar/Slot1"]
+layout_mode = 2
+alignment = 1
+
+[node name="Key" type="Label" parent="UserInterface/Hotbar/Slot1/VBox"]
+layout_mode = 2
+text = "1"
+horizontal_alignment = 1
+
+[node name="Name" type="Label" parent="UserInterface/Hotbar/Slot1/VBox"]
+layout_mode = 2
+text = "-"
+horizontal_alignment = 1
+
+[node name="Slot2" type="PanelContainer" parent="UserInterface/Hotbar"]
+custom_minimum_size = Vector2(100, 48)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="UserInterface/Hotbar/Slot2"]
+layout_mode = 2
+alignment = 1
+
+[node name="Key" type="Label" parent="UserInterface/Hotbar/Slot2/VBox"]
+layout_mode = 2
+text = "2"
+horizontal_alignment = 1
+
+[node name="Name" type="Label" parent="UserInterface/Hotbar/Slot2/VBox"]
+layout_mode = 2
+text = "-"
+horizontal_alignment = 1
+
+[node name="Slot3" type="PanelContainer" parent="UserInterface/Hotbar"]
+custom_minimum_size = Vector2(100, 48)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="UserInterface/Hotbar/Slot3"]
+layout_mode = 2
+alignment = 1
+
+[node name="Key" type="Label" parent="UserInterface/Hotbar/Slot3/VBox"]
+layout_mode = 2
+text = "3"
+horizontal_alignment = 1
+
+[node name="Name" type="Label" parent="UserInterface/Hotbar/Slot3/VBox"]
+layout_mode = 2
+text = "-"
+horizontal_alignment = 1
+
 [node name="CrouchCeilingDetection" type="ShapeCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("SphereShape3D_k4wwl")
@@ -458,3 +530,8 @@ target_position = Vector3(0, 0.5, 0)
 
 [node name="EditorModule" type="Node" parent="."]
 script = ExtResource("3_v3ckk")
+
+[node name="Inventory" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("4_bx7cj")
+player = NodePath("..")
+item_mount_path = NodePath("Head/Camera/ItemMount")

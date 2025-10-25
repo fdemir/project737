@@ -137,6 +137,11 @@ var gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity") 
 # Stores mouse input for rotating the camera in the physics process
 var mouseInput : Vector2 = Vector2(0,0)
 
+# Inventory + UI references
+var INVENTORY
+var HOTBAR_SLOT_PANELS : Array[Control] = []
+var HOTBAR_SLOT_LABELS : Array[Label] = []
+
 #endregion
 
 
@@ -157,6 +162,10 @@ func _ready():
 	initialize_animations()
 	check_controls()
 	enter_normal_state()
+
+	# Inventory setup and minimal HUD
+	ensure_inventory_actions()
+	setup_inventory_and_hotbar()
 	
 	if OS.get_name() == "Web":
 		Input.set_use_accumulated_input(false)
@@ -167,6 +176,7 @@ func _process(_delta):
 		handle_pausing()
 
 	handle_head_rotation()
+	handle_inventory_input()
 
 	update_debug_menu_per_frame()
 
@@ -208,9 +218,119 @@ func _physics_process(delta): # Most things happen here.
 
 func handle_item_interaction():
 	if RAY.is_colliding():
-		var item = RAY.get_collider()
-		if item.is_in_group("items"):
-			print("Item detected: ", item.item_name)
+		var collider = RAY.get_collider()
+		var item = _find_item_from_collider(collider)
+		if item and item.get_parent() and item.get_parent() != _get_item_mount():
+			if Input.is_action_just_pressed("interact") and INVENTORY:
+				var slot = INVENTORY.add_item_instance(item)
+				if slot != -1:
+					INVENTORY.set_active_slot(slot)
+				else:
+					print("Inventory full. Cannot pick up ", item.item_name)
+
+func _find_item_from_collider(collider) -> BaseItem:
+	var node = collider
+	while node and !(node is BaseItem) and node is Node:
+		node = node.get_parent()
+	return node if (node and node is BaseItem and node.is_in_group("items")) else null
+
+func _get_item_mount() -> Node3D:
+	return get_node("Head/Camera/ItemMount") as Node3D
+
+# Inventory wiring and UI
+func ensure_inventory_actions():
+	# Hotbar selection 1-3 + item use + interact
+	var actions := ["hotbar_1", "hotbar_2", "hotbar_3", "item_use", "item_alt_use", "interact"]
+	for a in actions:
+		if !InputMap.has_action(a):
+			InputMap.add_action(a)
+	# Bind keys if none
+	if InputMap.action_get_events("hotbar_1").is_empty():
+		var e1 := InputEventKey.new()
+		e1.keycode = KEY_1
+		InputMap.action_add_event("hotbar_1", e1)
+	if InputMap.action_get_events("hotbar_2").is_empty():
+		var e2 := InputEventKey.new()
+		e2.keycode = KEY_2
+		InputMap.action_add_event("hotbar_2", e2)
+	if InputMap.action_get_events("hotbar_3").is_empty():
+		var e3 := InputEventKey.new()
+		e3.keycode = KEY_3
+		InputMap.action_add_event("hotbar_3", e3)
+	if InputMap.action_get_events("item_use").is_empty():
+		var mb_l := InputEventMouseButton.new()
+		mb_l.button_index = MOUSE_BUTTON_LEFT
+		InputMap.action_add_event("item_use", mb_l)
+	if InputMap.action_get_events("item_alt_use").is_empty():
+		var mb_r := InputEventMouseButton.new()
+		mb_r.button_index = MOUSE_BUTTON_RIGHT
+		InputMap.action_add_event("item_alt_use", mb_r)
+	if InputMap.action_get_events("interact").is_empty():
+		var e := InputEventKey.new()
+		e.keycode = KEY_E
+		InputMap.action_add_event("interact", e)
+
+func setup_inventory_and_hotbar():
+	INVENTORY = get_node_or_null("Inventory")
+	if INVENTORY:
+		# Connect signals
+		INVENTORY.slot_changed.connect(_on_inventory_slot_changed)
+		INVENTORY.active_slot_changed.connect(_on_inventory_active_slot_changed)
+		INVENTORY.item_picked_up.connect(_on_inventory_slot_changed)
+	# Cache UI references
+	var hotbar := get_node_or_null("UserInterface/Hotbar")
+	if hotbar:
+		HOTBAR_SLOT_PANELS = [
+			hotbar.get_node("Slot1") as Control,
+			hotbar.get_node("Slot2") as Control,
+			hotbar.get_node("Slot3") as Control
+		]
+		HOTBAR_SLOT_LABELS = [
+			hotbar.get_node("Slot1/VBox/Name") as Label,
+			hotbar.get_node("Slot2/VBox/Name") as Label,
+			hotbar.get_node("Slot3/VBox/Name") as Label
+		]
+		_refresh_hotbar_all()
+
+func handle_inventory_input():
+	if Input.is_action_just_pressed("hotbar_1") and INVENTORY:
+		INVENTORY.set_active_slot(0)
+	if Input.is_action_just_pressed("hotbar_2") and INVENTORY:
+		INVENTORY.set_active_slot(1)
+	if Input.is_action_just_pressed("hotbar_3") and INVENTORY:
+		INVENTORY.set_active_slot(2)
+	if Input.is_action_just_pressed("item_use") and INVENTORY:
+		INVENTORY.use_active()
+	if Input.is_action_just_pressed("item_alt_use") and INVENTORY:
+		INVENTORY.alternate_use_active()
+
+func _on_inventory_slot_changed(slot_index: int, _item):
+	_update_hotbar_slot(slot_index)
+
+func _on_inventory_active_slot_changed(prev_index: int, new_index: int):
+	_highlight_hotbar_slot(prev_index, false)
+	_highlight_hotbar_slot(new_index, true)
+
+func _refresh_hotbar_all():
+	for i in range(HOTBAR_SLOT_LABELS.size()):
+		_update_hotbar_slot(i)
+		_highlight_hotbar_slot(i, INVENTORY and i == INVENTORY.get_active_slot_index())
+
+func _update_hotbar_slot(index: int):
+	if index < 0 or index >= HOTBAR_SLOT_LABELS.size():
+		return
+	var name_label := HOTBAR_SLOT_LABELS[index]
+	if INVENTORY:
+		var item = INVENTORY.get_item(index)
+		name_label.text = item.item_name if item else "-"
+	else:
+		name_label.text = "-"
+
+func _highlight_hotbar_slot(index: int, active: bool):
+	if index < 0 or index >= HOTBAR_SLOT_PANELS.size():
+		return
+	var c := HOTBAR_SLOT_PANELS[index]
+	c.modulate = Color(1, 1, 0.6) if active else Color(1, 1, 1)
 
 #endregion
 

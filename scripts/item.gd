@@ -30,8 +30,8 @@ var is_equipped: bool = false
 var cooldown_timer: float = 0.0
 var steam_id: int = 0 # Steam ID of the owner
 
-# World-space position at the time of pickup (used to help late joiners remove world items reliably)
-var pickup_world_position: Vector3 = Vector3.ZERO
+# # World-space position at the time of pickup (used to help late joiners remove world items reliably)
+# var pickup_world_position: Vector3 = Vector3.ZERO
 
 # References
 var player_controller: Node = null
@@ -63,9 +63,7 @@ func equip(player: CharacterBody3D, player_steam_id: int = 0):
 	_on_equipped()
 	item_equipped.emit()
 
-# Called by gameplay code just before pickup to record the world position for late-join cleanup
-func set_pickup_world_position(pos: Vector3) -> void:
-	pickup_world_position = pos
+
 
 # Called when item is unequipped
 func unequip():
