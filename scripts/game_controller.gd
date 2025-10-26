@@ -11,6 +11,8 @@ var current_gui: Control
 
 func _ready() -> void:
 	Global.game_controller = self
+	
+	
 
 	if default_world_scene != "":
 		change_world_scene(default_world_scene)

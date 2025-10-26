@@ -1,6 +1,6 @@
 class_name NetworkManager extends Node
 
-var peer
+var peer: IMultiplayer
 
 enum PeerMode {
 	STEAM,
@@ -8,15 +8,29 @@ enum PeerMode {
 	NONE
 }
 
-func _ready() -> void:
-	peer = ENetMultiplayerPeer.new()
-	Global.network_manager = self
+func _init() -> void:
+	setup_peer_mode()
 
 func get_peer():
-	return peer as ENetMultiplayerPeer
+	return peer.get_peer()
 
+func get_multiplayer_peer():
+	return peer
+
+# Should be called when the multiplayer peer is changed
 func update_multiplayer_peer():
 	multiplayer.multiplayer_peer = get_peer()
+	
+func setup_peer_mode(peer_mode: PeerMode = PeerMode.LOCAL):
+	match peer_mode:
+		PeerMode.STEAM:
+			# peer = SteamMultiplayerPeer.new()
+			pass
+		PeerMode.LOCAL:
+			peer = LocalMultiplayer.new()
+		PeerMode.NONE:
+			peer = null
+	
 
 # TODO: going to be used when we want to setup steam
 ## Sets the peer mode for the multiplayer connection -> Steam OR Local

@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://deuvaeljog13r"]
+[gd_scene load_steps=7 format=3 uid="uid://deuvaeljog13r"]
 
 [ext_resource type="Material" uid="uid://rdhrhgrb78ls" path="res://addons/cyclops_level_builder/materials/grid.tres" id="1_demjq"]
 [ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="2_x8nth"]
-[ext_resource type="PackedScene" uid="uid://c0gq8hv2r88rj" path="res://scenes/items/stick/stick.tscn" id="3_pe2ao"]
 [ext_resource type="Script" uid="uid://fewgldyb6up1" path="res://scripts/player_spawner.gd" id="4_xl732"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_83pjo"]
@@ -48,14 +47,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9365599, -4.4975405)
 use_collision = true
 size = Vector3(1, 1, 2.5723877)
 
-[node name="Stick" parent="." instance=ExtResource("3_pe2ao")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17760468, 0.9137083, -1.2268581)
-
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 script = ExtResource("4_xl732")
 player_scene = ExtResource("2_x8nth")
-spawn_points = Array[NodePath]([NodePath(""), NodePath(""), NodePath(""), NodePath("")])
+spawn_points = Array[NodePath]([NodePath("../Players/Marker3D"), NodePath("../Players/Marker3D2"), NodePath("../Players/Marker3D3"), NodePath("../Players/Marker3D4")])
 spawn_in_empty = true
 metadata/_custom_type_script = "uid://fewgldyb6up1"
 

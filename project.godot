@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 CyclopsAutoload="*res://addons/cyclops_level_builder/cyclops_global_scene.tscn"
 Global="*res://scripts/global.gd"
 DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
+BaseNetworkManager="*res://scripts/managers/network_manager.gd"
 
 [editor_plugins]
 

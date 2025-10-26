@@ -7,7 +7,7 @@
 script = ExtResource("1_o5qli")
 world = NodePath("World")
 gui = NodePath("GUI")
-default_world_scene = "res://scenes/worlds/level.tscn"
+default_world_scene = "res://scenes/menu.tscn"
 
 [node name="World" type="Node3D" parent="."]
 
