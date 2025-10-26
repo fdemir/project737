@@ -1,6 +1,7 @@
 class_name NetworkManager extends Node
 
 var peer: IMultiplayer
+var peer_mode: PeerMode
 
 enum PeerMode {
 	STEAM,
@@ -9,6 +10,7 @@ enum PeerMode {
 }
 
 func _init() -> void:
+	peer_mode = PeerMode.LOCAL
 	setup_peer_mode()
 
 func get_peer():
@@ -16,6 +18,9 @@ func get_peer():
 
 func get_multiplayer_peer():
 	return peer
+
+func get_peer_mode():
+	return peer_mode
 
 # Should be called when the multiplayer peer is changed
 func update_multiplayer_peer():

@@ -1,6 +1,8 @@
 extends Node
-
 var game_controller: GameController
-
-#  Current player
 var player: Character
+
+
+#region Debug 
+var session_type: String
+#endregion

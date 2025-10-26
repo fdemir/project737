@@ -144,6 +144,8 @@ var INVENTORY
 var HOTBAR_SLOT_PANELS : Array[Control] = []
 var HOTBAR_SLOT_LABELS : Array[Label] = []
 
+var steam_id: int = 0
+
 #endregion
 
 
@@ -177,8 +179,12 @@ func _ready():
 
 	# Multiplayer setup
 	CAMERA.current = is_multiplayer_authority()
-	
 
+	#if  NetworkManager.get_peer_mode() == NetworkManager.PeerMode.STEAM:
+		#steam_id = Steam.getSteamID()
+	#else:
+		#steam_id = 0
+	
 func _process(_delta):
 	if !is_multiplayer_authority(): return
 	
