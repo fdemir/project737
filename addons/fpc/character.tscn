@@ -1,6 +1,7 @@
-[gd_scene load_steps=23 format=3 uid="uid://cc1m2a1obsyn4"]
+[gd_scene load_steps=25 format=3 uid="uid://cc1m2a1obsyn4"]
 
 [ext_resource type="Script" uid="uid://hutuis63hgev" path="res://addons/fpc/character.gd" id="1_0t4e8"]
+[ext_resource type="Script" uid="uid://6qxs581s2cdw" path="res://scripts/interaction.gd" id="2_qaoyu"]
 [ext_resource type="Script" uid="uid://dgfl3skp075ft" path="res://addons/fpc/EditorModule.gd" id="3_v3ckk"]
 [ext_resource type="Script" uid="uid://u5u7xxlvmcxx" path="res://addons/fpc/debug.gd" id="3_x1wcc"]
 [ext_resource type="Script" uid="uid://bxn6dpt68u0rx" path="res://scripts/managers/inventory_manager.gd" id="4_bx7cj"]
@@ -381,7 +382,12 @@ MarginContainer/constants/margin_top = 10
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_k4wwl"]
 
-[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH", "RAY")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bx7cj"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("1_0t4e8")
 base_speed = 2.8
@@ -392,7 +398,6 @@ HEADBOB_ANIMATION = NodePath("Head/HeadbobAnimation")
 JUMP_ANIMATION = NodePath("Head/JumpAnimation")
 CROUCH_ANIMATION = NodePath("CrouchAnimation")
 COLLISION_MESH = NodePath("Collision")
-RAY = NodePath("Head/Camera/Ray")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -412,9 +417,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera" type="Camera3D" parent="Head"]
 
-[node name="Ray" type="RayCast3D" parent="Head/Camera"]
+[node name="Interaction" type="RayCast3D" parent="Head/Camera"]
 transform = Transform3D(2.072, 0, 0, 0, -1.09278474e-07, -2.072, 0, 2.5, -9.057e-08, 0, 0, 0)
 collision_mask = 7
+script = ExtResource("2_qaoyu")
 
 [node name="ItemMount" type="Marker3D" parent="Head/Camera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31808016, 0, -0.8943661)
@@ -523,6 +529,24 @@ layout_mode = 2
 text = "-"
 horizontal_alignment = 1
 
+[node name="InteractableIndicator" type="PanelContainer" parent="UserInterface"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 24.0
+offset_top = -20.0
+offset_right = 64.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="UserInterface/InteractableIndicator"]
+layout_mode = 2
+
 [node name="CrouchCeilingDetection" type="ShapeCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("SphereShape3D_k4wwl")
@@ -535,3 +559,9 @@ script = ExtResource("3_v3ckk")
 script = ExtResource("4_bx7cj")
 player = NodePath("..")
 item_mount_path = NodePath("Head/Camera/ItemMount")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_bx7cj")
+
+[connection signal="interactable_dedected" from="Head/Camera/Interaction" to="." method="_on_interaction_interactable_dedected"]
+[connection signal="interactable_undedected" from="Head/Camera/Interaction" to="." method="_on_interaction_interactable_undedected"]

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bsbqxcmuddnmy"]
+[gd_scene load_steps=3 format=3 uid="uid://bsbqxcmuddnmy"]
 
 [ext_resource type="Script" uid="uid://w6an8mxx6hr7" path="res://scripts/game_controller.gd" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://caajeca22o12b" path="res://scripts/managers/network_manager.gd" id="2_0wfyh"]
 
 [node name="Game" type="Node" node_paths=PackedStringArray("world", "gui")]
 script = ExtResource("1_o5qli")
@@ -18,3 +19,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Network" type="Node" parent="."]
+script = ExtResource("2_0wfyh")

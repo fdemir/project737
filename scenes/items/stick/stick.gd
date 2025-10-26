@@ -6,8 +6,6 @@ func _ready():
 	item_name = "Stick"
 	item_description = "A stick"
 	can_use = true
-	can_equip = true
-	can_unequip = true
 	use_cooldown = 0.5
 	equip_cooldown = 0.5
 

@@ -24,7 +24,6 @@ var _active_slot: int = 0
 
 # Helpers
 func _get_item_mount() -> Node3D:
-	print("Getting item mount from player: ", player, " with path: ", item_mount_path)
 	if player:
 		if String(item_mount_path) != "":
 			var n = player.get_node_or_null(item_mount_path)
@@ -310,8 +309,6 @@ func _attach_item_to_player(item: BaseItem) -> void:
 func _equip_slot(slot_index: int) -> void:
 	var item := _get_item(slot_index)
 	if item == null:
-		return
-	if not item.can_equip:
 		return
 	item.equip(player)
 

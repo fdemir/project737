@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://deuvaeljog13r"]
+[gd_scene load_steps=8 format=3 uid="uid://deuvaeljog13r"]
 
 [ext_resource type="Material" uid="uid://rdhrhgrb78ls" path="res://addons/cyclops_level_builder/materials/grid.tres" id="1_demjq"]
 [ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="2_x8nth"]
 [ext_resource type="PackedScene" uid="uid://c0gq8hv2r88rj" path="res://scenes/items/stick/stick.tscn" id="3_pe2ao"]
+[ext_resource type="Script" uid="uid://fewgldyb6up1" path="res://scripts/player_spawner.gd" id="4_xl732"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_83pjo"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -29,15 +30,11 @@ shadow_enabled = true
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8105483, 0.3137083, -0.8394642)
 use_collision = true
-size = Vector3(20, 1, 20)
+size = Vector3(20, 0.1, 20)
 material = ExtResource("1_demjq")
 
-[node name="Character" parent="." instance=ExtResource("2_x8nth")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.8585227, 0.50000024, 4.5065274)
-default_reticle = ""
-
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.970732, 0.4383545)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2199142, 0.970732, 0.4383545)
 use_collision = true
 size = Vector3(1, 1, 4.147705)
 
@@ -52,4 +49,26 @@ use_collision = true
 size = Vector3(1, 1, 2.5723877)
 
 [node name="Stick" parent="." instance=ExtResource("3_pe2ao")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.88301, 0.9137083, 4.3983126)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17760468, 0.9137083, -1.2268581)
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")
+script = ExtResource("4_xl732")
+player_scene = ExtResource("2_x8nth")
+spawn_points = Array[NodePath]([NodePath(""), NodePath(""), NodePath(""), NodePath("")])
+spawn_in_empty = true
+metadata/_custom_type_script = "uid://fewgldyb6up1"
+
+[node name="Players" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.432124, 1.4295954, 0)
+
+[node name="Marker3D" type="Marker3D" parent="Players"]
+
+[node name="Marker3D2" type="Marker3D" parent="Players"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0183082, 0, 0)
+
+[node name="Marker3D3" type="Marker3D" parent="Players"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.0926564)
+
+[node name="Marker3D4" type="Marker3D" parent="Players"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6965976, 0, 2.6600108)

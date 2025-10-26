@@ -1,8 +1,8 @@
-extends Node3D
+extends Interactable
 class_name BaseItem
 
 # Signals for item events
-signal item_equipped
+signal item_equipped(item: BaseItem)
 signal item_unequipped
 signal item_used
 
@@ -15,12 +15,9 @@ signal item_used
 @export var can_use: bool = true
 # Use cooldown
 @export var use_cooldown: float = 0.5
-# Whether the item can be equipped
-@export var can_equip: bool = true
 # Equip cooldown
 @export var equip_cooldown: float = 0.5
-# Whether the item can be unequipped
-@export var can_unequip: bool = true
+
 
 # # Network identity (optional). For placed world items, set this in the scene for deterministic matching across peers.
 # @export var network_id: String = ""
@@ -57,11 +54,10 @@ func equip(player: CharacterBody3D, player_steam_id: int = 0):
 	player_controller = player
 	steam_id = player_steam_id
 	is_equipped = true
-	visible = true
 	set_process(true)
 
 	_on_equipped()
-	item_equipped.emit()
+	item_equipped.emit(self)
 
 
 
@@ -71,7 +67,6 @@ func unequip():
 		return
 
 	is_equipped = false
-	visible = false
 	set_process(false)
 
 	_on_unequipped()

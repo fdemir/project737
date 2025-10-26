@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://othrg6sq0vc"]
+[gd_scene load_steps=3 format=3 uid="uid://othrg6sq0vc"]
 
+[ext_resource type="Script" uid="uid://cb1hyypjbnsim" path="res://scenes/menu.gd" id="1_vjb58"]
 [ext_resource type="Material" uid="uid://rdhrhgrb78ls" path="res://addons/cyclops_level_builder/materials/grid.tres" id="1_yqeox"]
 
 [node name="Menu" type="Node3D"]
+script = ExtResource("1_vjb58")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 size = Vector3(20, 1, 20)
@@ -46,6 +48,23 @@ layout_mode = 2
 layout_mode = 2
 text = "MAIN MENU"
 
-[node name="Button" type="Button" parent="Control/PanelContainer/VBoxContainer"]
+[node name="play" type="Button" parent="Control/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "PLAY"
+
+[node name="host" type="Button" parent="Control/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "HOST"
+
+[node name="join" type="Button" parent="Control/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "JOIN"
+
+[node name="close" type="Button" parent="Control/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "CLOSE"
+
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/close" to="." method="_on_close_pressed"]

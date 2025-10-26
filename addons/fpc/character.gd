@@ -2,7 +2,7 @@
 # MIT license
 # Quality Godot First Person Controller v2
 
-
+class_name Character
 extends CharacterBody3D
 
 
@@ -50,7 +50,9 @@ extends CharacterBody3D
 ## A reference to the the player's collision shape for use in the character script.
 @export var COLLISION_MESH : CollisionShape3D
 
-@export var RAY : RayCast3D
+@onready var interaction: Interaction = $Head/Camera/Interaction
+@onready var interactable_indicator: PanelContainer = $UserInterface/InteractableIndicator
+@onready var interactable_indicator_label: Label = $UserInterface/InteractableIndicator/Label
 
 #endregion
 
@@ -151,6 +153,9 @@ var HOTBAR_SLOT_LABELS : Array[Label] = []
 func _ready():
 	#It is safe to comment this line if your game doesn't start with the mouse captured
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	# Set the current player as a global in the players client
+	Global.player = self
 
 	# If the controller is rotated in a certain direction for game design purposes, redirect this rotation into the head.
 	HEAD.rotation.y = rotation.y
@@ -170,8 +175,13 @@ func _ready():
 	if OS.get_name() == "Web":
 		Input.set_use_accumulated_input(false)
 
+	# Multiplayer setup
+	CAMERA.current = is_multiplayer_authority()
+	
 
 func _process(_delta):
+	if !is_multiplayer_authority(): return
+	
 	if pausing_enabled:
 		handle_pausing()
 
@@ -182,6 +192,8 @@ func _process(_delta):
 
 
 func _physics_process(delta): # Most things happen here.
+	if !is_multiplayer_authority(): return
+	
 	# Gravity
 	if dynamic_gravity:
 		gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -214,28 +226,6 @@ func _physics_process(delta): # Most things happen here.
 
 	was_on_floor = is_on_floor() # This must always be at the end of physics_process
 
-	handle_item_interaction()
-
-func handle_item_interaction():
-	if RAY.is_colliding():
-		var collider = RAY.get_collider()
-		var item = _find_item_from_collider(collider)
-		if item and item.get_parent() and item.get_parent() != _get_item_mount():
-			if Input.is_action_just_pressed("interact") and INVENTORY:
-				var slot = INVENTORY.add_item_instance(item)
-				if slot != -1:
-					INVENTORY.set_active_slot(slot)
-				else:
-					print("Inventory full. Cannot pick up ", item.item_name)
-
-func _find_item_from_collider(collider) -> BaseItem:
-	var node = collider
-	while node and !(node is BaseItem) and node is Node:
-		node = node.get_parent()
-	return node if (node and node is BaseItem and node.is_in_group("items")) else null
-
-func _get_item_mount() -> Node3D:
-	return get_node("Head/Camera/ItemMount") as Node3D
 
 # Inventory wiring and UI
 func ensure_inventory_actions():
@@ -618,3 +608,14 @@ func handle_pausing():
 				#get_tree().paused = false
 
 #endregion
+
+
+func _on_interaction_interactable_dedected(item: Interactable) -> void:
+	if item and item.input_map_action:
+		interactable_indicator.visible = true
+		interactable_indicator_label.text = item.interaction_text
+		
+
+
+func _on_interaction_interactable_undedected() -> void:
+		interactable_indicator.visible = false
