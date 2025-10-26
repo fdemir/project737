@@ -67,4 +67,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0183082, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.0926564)
 
 [node name="Marker3D4" type="Marker3D" parent="Players"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6965976, 0, 2.6600108)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.183196, 0, 2.3897579)
